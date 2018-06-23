@@ -4,6 +4,10 @@ import {Switch,Route} from 'react-router-dom';
 //Componets-Pages
 
 import List from './List';
+import store from '../../../store';
+import { loadProducts } from '../../../actionCreatos';
+
+store.dispatch(loadProducts());
 
 const Products = ({match}) =>
 (

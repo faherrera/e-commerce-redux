@@ -1,40 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Collection from 'react-materialize/lib/Collection';
 import { CollectionItem } from 'react-materialize';
+import {connect} from 'react-redux';
 
 //Store
 import store from '../../../../store';
 import Icon from 'react-materialize/lib/Icon';
 import { removeFromCart } from '../../../../actionCreatos';
 
-export default class ShoppingCart extends Component {
-  constructor(){
-    super();
-    this.removeFromCart = this.removeFromCart.bind(this);
-
-    this.state = {
-      cart: []
-    }
-
-    store.subscribe(()=> {
-      this.setState({
-        cart: store.getState().cart
-      });
-    });
-  }
-
-  removeFromCart(product){
-    store.dispatch(removeFromCart(product));
-  }
-
-  render() {
+ const ShoppingCart = (props) => {
     return (
       <Collection header='Carrito'>
           {
-            this.state.cart.map((product,index) => (
+            props.cart.map((product,index) => (
               <CollectionItem key={index}>
                 {product.title } - {product.price}
-                <a onClick={(e)=> this.removeFromCart(product)} href="#!">
+                <a onClick={(e)=> props.removeFromCart(product)} href="#!">
                   <i
                     className="material-icons right red-text">
                     cancel
@@ -48,12 +29,28 @@ export default class ShoppingCart extends Component {
               Total:
             </strong>
             <em>
-              $
-              {/* ${this.state.cart.reduce((sum,product)=>( sum + product.price))} */}
+              $ {props.cart.reduce((a,b) => a+b.price,0)}
             </em>
           </CollectionItem>
 
       </Collection>
     );
-  }
+  
 }
+
+const mapStateToProps = state => {
+  return {
+    cart: state.cart
+  };
+
+}
+
+const mapDispatchToProps = dispatch => (
+  {
+    removeFromCart(product){
+      dispatch(removeFromCart(product));
+    }
+  }
+);
+
+export default connect(mapStateToProps,mapDispatchToProps)(ShoppingCart);

@@ -1,4 +1,4 @@
-import store from './store';
+import axios from 'axios';
 
 const addToCart = product => (
  {
@@ -14,4 +14,19 @@ const removeFromCart = product => (
   }
 );
 
-export {addToCart,removeFromCart};
+const loadProducts = () => {
+  return dispatch =>(
+    axios.get("http://localhost:3001/products")
+    .then(
+      res => dispatch({
+        type:"REPLACE_PRODUCTS",
+        products:{
+          loading:false,
+          data:res.data
+        }
+      })
+    )
+  )
+}
+
+export {addToCart,removeFromCart,loadProducts};
